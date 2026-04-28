@@ -1,16 +1,10 @@
-Musiclab — Tonalités Express
+Musiclab – Tonalités Express
 
-Mini logiciel HTML/CSS/JS autonome.
-Ouvrir index.html dans un navigateur, ou déposer le dossier sur un site.
+Version avec 4 onglets dans le tuto :
+- À savoir par cœur
+- Avec des dièses
+- Avec des bémols
+- En plus
 
-Contenu :
-- tuto dièses
-- tuto bémols
-- mémo / tableau récapitulatif
-- entraînement dièses
-- entraînement bémols
-- entraînement mélangé
-- mode tonalité vers armure
-- défi 10 questions
-
-Inspiré visuellement de Lecture de Notes Express : accueil, boutons verts, mode défi, cartes simples, interface mobile.
+Dans À savoir par cœur : exceptions Do Majeur / Fa Majeur mises en avant + ordre des dièses et des bémols.
+Dans En plus : relatives mineures + tableau complet avec armures en clé de sol.
