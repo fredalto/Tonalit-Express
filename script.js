@@ -19,11 +19,30 @@ const KEYS = [
 ];
 let state={mode:'mixed',pool:[],i:0,total:0,score:0,current:null,reverse:false,challenge:false};
 function $(id){return document.getElementById(id)}
-function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('show'));$(id).classList.add('show'); if(id==='tuto') setTutorial('sharp')}
-function setTutorial(kind){['Sharp','Flat','Memory'].forEach(k=>$('tab'+k).classList.remove('selected')); const box=$('tutorialContent');
- if(kind==='sharp'){ $('tabSharp').classList.add('selected'); box.innerHTML=`<div class="tutorial-card"><h3>Armure avec des dièses ♯</h3>${staffSvg({type:'sharp',n:3})}<p class="rule">Dernier dièse + ½ ton diatonique = tonalité majeure.</p><div class="example"><strong>Exemple :</strong><br>Il y a Fa♯, Do♯, Sol♯.<br>Le dernier dièse est <strong>Sol♯</strong>.<br>Sol♯ + ½ ton = <strong>La</strong>.<br>Donc : <strong>La Majeur</strong>.</div><button onclick="startTraining('sharps')">Je m’entraîne avec les dièses</button></div>`;}
- if(kind==='flat'){ $('tabFlat').classList.add('selected'); box.innerHTML=`<div class="tutorial-card"><h3>Armure avec des bémols ♭</h3>${staffSvg({type:'flat',n:4})}<p class="rule">Avant-dernier bémol = tonalité majeure.</p><div class="example"><strong>Exemple :</strong><br>Il y a Si♭, Mi♭, La♭, Ré♭.<br>L’avant-dernier bémol est <strong>La♭</strong>.<br>Donc : <strong>La♭ Majeur</strong>.<br><br>⚠ Exception : <strong>1 bémol = Fa Majeur</strong>.</div><button onclick="startTraining('flats')">Je m’entraîne avec les bémols</button></div>`;}
- if(kind==='memory'){ $('tabMemory').classList.add('selected'); box.innerHTML=`<div class="tutorial-card"><h3>À savoir par cœur</h3><div class="memo-grid"><div class="memo"><strong>Ordre des dièses</strong><br>${SHARP_ORDER.join(' → ')}</div><div class="memo"><strong>Ordre des bémols</strong><br>${FLAT_ORDER.join(' → ')}</div><div class="memo"><strong>Cas simples</strong><br>Do Majeur : rien à la clé<br>Fa Majeur : 1 bémol</div><div class="memo"><strong>Relatives mineures</strong><br>Majeur − 3ce mineure = mineur relatif</div></div>${recapTable()}</div>`;}
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('show'));$(id).classList.add('show'); if(id==='tuto') setTutorial('memory')}
+function setTutorial(kind){
+ ['Sharp','Flat','Memory','Plus'].forEach(k=>$('tab'+k).classList.remove('selected'));
+ const box=$('tutorialContent');
+ if(kind==='memory'){
+   $('tabMemory').classList.add('selected');
+   box.innerHTML=`<div class="tutorial-card"><h3>À savoir par cœur</h3>
+   <div class="exception-box"><strong>Exceptions à connaître absolument</strong><br><span>Do Majeur</span> : rien à la clé<br><span>Fa Majeur</span> : 1 bémol à la clé</div>
+   <div class="memo-grid"><div class="memo"><strong>Ordre des dièses</strong><br>${SHARP_ORDER.join(' → ')}</div><div class="memo"><strong>Ordre des bémols</strong><br>${FLAT_ORDER.join(' → ')}</div></div>
+   <p class="mini-note">Commence par mémoriser ces 4 choses. Ensuite les méthodes deviennent beaucoup plus simples.</p>
+   <div class="quick-actions"><button onclick="setTutorial('sharp')">Comprendre les dièses</button><button onclick="setTutorial('flat')">Comprendre les bémols</button></div></div>`;
+ }
+ if(kind==='sharp'){
+   $('tabSharp').classList.add('selected');
+   box.innerHTML=`<div class="tutorial-card"><h3>Armure avec des dièses ♯</h3>${staffSvg({type:'sharp',n:3})}<p class="rule">Dernier dièse + ½ ton diatonique = tonalité majeure.</p><div class="example"><strong>Exemple :</strong><br>Il y a Fa♯, Do♯, Sol♯.<br>Le dernier dièse est <strong>Sol♯</strong>.<br>Sol♯ + ½ ton = <strong>La</strong>.<br>Donc : <strong>La Majeur</strong>.</div><button onclick="startTraining('sharps')">Je m’entraîne avec les dièses</button></div>`;
+ }
+ if(kind==='flat'){
+   $('tabFlat').classList.add('selected');
+   box.innerHTML=`<div class="tutorial-card"><h3>Armure avec des bémols ♭</h3>${staffSvg({type:'flat',n:4})}<p class="rule">Avant-dernier bémol = tonalité majeure.</p><div class="example"><strong>Exemple :</strong><br>Il y a Si♭, Mi♭, La♭, Ré♭.<br>L’avant-dernier bémol est <strong>La♭</strong>.<br>Donc : <strong>La♭ Majeur</strong>.<br><br>⚠ Exception : <strong>1 bémol = Fa Majeur</strong>.</div><button onclick="startTraining('flats')">Je m’entraîne avec les bémols</button></div>`;
+ }
+ if(kind==='plus'){
+   $('tabPlus').classList.add('selected');
+   box.innerHTML=`<div class="tutorial-card"><h3>En plus</h3><div class="memo plus-memo"><strong>Relatives mineures</strong><br>Majeur − 3ce mineure = mineur relatif.<br>Exemple : Do Majeur → La mineur.</div>${recapTable()}</div>`;
+ }
 }
 function startTraining(mode){state={mode,pool:getPool(mode),i:0,total:8,score:0,reverse:false,challenge:false};go('game');$('gameTitle').textContent='Entraînement';nextQuestion()}
 function startChallenge(){state={mode:'mixed',pool:getPool('mixed'),i:0,total:10,score:0,reverse:false,challenge:true};go('game');$('gameTitle').textContent='Défi 10 questions';nextQuestion()}
@@ -39,7 +58,12 @@ function explainKey(k){ if(k.type==='none') return 'Do Majeur : il n’y a rien 
 function explainReverse(k){ if(k.type==='none')return 'Do Majeur : rien à la clé.'; if(k.type==='sharp')return `${k.key} : on descend d’½ ton et on récite l’ordre des dièses jusqu’à ${SHARP_ORDER[k.n-1]}.`; if(k.n===1)return 'Fa Majeur : 1 bémol à la clé.'; return `${k.key} : on récite l’ordre des bémols jusqu’à la note de la tonalité, puis on ajoute un bémol.`;}
 function armureLabel(k){if(k.type==='none')return 'Rien à la clé';return `${k.n} ${k.type==='sharp'?'dièse'+(k.n>1?'s':''):'bémol'+(k.n>1?'s':'')}`}
 function showResults(){go('results');$('scoreBig').textContent=`${state.score}/${state.total}`; const p=state.score/state.total; $('scoreText').textContent=p>=.9?'Excellent : les tonalités sont très solides !':p>=.7?'Très bien : encore quelques réflexes à automatiser.':p>=.5?'C’est en route : refais un tuto puis un entraînement.':'On reprend tranquillement : dièses puis bémols séparément.'}
-function staffSvg(k){const sharpPos=[42,62,34,54,74,46,66], flatPos=[66,46,74,54,82,62,90]; let items=''; if(k.type==='sharp') for(let i=0;i<k.n;i++) items+=`<text class="acc" x="${125+i*28}" y="${sharpPos[i]}" font-size="32">♯</text>`; if(k.type==='flat') for(let i=0;i<k.n;i++) items+=`<text class="acc" x="${125+i*28}" y="${flatPos[i]}" font-size="32">♭</text>`; return `<svg viewBox="0 0 520 130" role="img" aria-label="armure"><rect x="0" y="0" width="520" height="130" rx="12" fill="#fff"/><g stroke="#222" stroke-width="1.4">${[34,46,58,70,82].map(y=>`<line x1="35" y1="${y}" x2="485" y2="${y}"/>`).join('')}</g><text x="54" y="82" font-size="62" font-family="Georgia">𝄞</text>${items}<text class="key-label" x="36" y="112">${armureLabel(k)}</text></svg>`}
-function recapTable(){return `<table class="table"><tr><th>Armure</th><th>Majeur</th><th>mineur relatif</th></tr>${KEYS.map(k=>`<tr><td>${armureLabel(k)}</td><td>${k.key}</td><td>${k.minor}</td></tr>`).join('')}</table>`}
+function staffSvg(k){const sharpPos=[42,62,34,54,74,46,66], flatPos=[66,46,74,54,82,62,90]; let items=''; if(k.type==='sharp') for(let i=0;i<k.n;i++) items+=`<text class="acc" x="${125+i*28}" y="${sharpPos[i]}" font-size="32">♯</text>`; if(k.type==='flat') for(let i=0;i<k.n;i++) items+=`<text class="acc" x="${125+i*28}" y="${flatPos[i]}" font-size="32">♭</text>`; return `<svg viewBox="0 0 520 130" role="img" aria-label="armure"><rect x="0" y="0" width="520" height="130" rx="12" fill="#fff"/><g stroke="#222" stroke-width="1.4">${[34,46,58,70,82].map(y=>`<line x1="35" y1="${y}" x2="485" y2="${y}"/>`).join('')}</g><text x="54" y="82" font-size="62" font-family="Georgia">𝄞</text>${items}</svg>`}
+function recapTable(){
+ const sharps=KEYS.filter(k=>k.type==='none'||k.type==='sharp');
+ const flats=KEYS.filter(k=>k.type==='flat');
+ const rows=arr=>arr.map(k=>`<tr><td class="armure-cell">${staffSvg(k)}</td><td>${k.key}</td><td>${k.minor}</td></tr>`).join('');
+ return `<h3 class="table-title">Tableau récapitulatif</h3><p class="mini-note">Armure en clé de sol, tonalité majeure et relative mineure.</p><h4>Armures avec dièses</h4><table class="table recap-table"><tr><th>Armure</th><th>Majeur</th><th>Mineur relatif</th></tr>${rows(sharps)}</table><h4>Armures avec bémols</h4><table class="table recap-table"><tr><th>Armure</th><th>Majeur</th><th>Mineur relatif</th></tr>${rows(flats)}</table>`;
+}
 function random(arr){return arr[Math.floor(Math.random()*arr.length)]} function shuffle(a){return a.sort(()=>Math.random()-0.5)}
-setTutorial('sharp');
+setTutorial('memory');
