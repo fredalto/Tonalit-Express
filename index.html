@@ -12,13 +12,32 @@
     <section class="section">
       <div id="home" class="screen show">
         <p class="intro">Apprends à reconnaître les tonalités majeures à partir de l’armure.</p>
-        <div class="mode-grid">
-          <button onclick="go('tuto')">📘 Tuto</button>
-          <button onclick="startTraining('sharps')">♯ Entraînement dièses</button>
-          <button onclick="startTraining('flats')">♭ Entraînement bémols</button>
-          <button onclick="startTraining('mixed')">🎯 Mélange</button>
-          <button onclick="startReverse()">🔁 Tonalité → armure</button>
-          <button class="red" onclick="startChallenge()">⚡ Défi 10 questions</button>
+        <div class="home-groups">
+          <div class="home-block learn-block">
+            <h3>📘 Apprendre</h3>
+            <button onclick="go('tuto')">Tuto rapide</button>
+          </div>
+
+          <div class="home-block">
+            <h3>🎼 Reconnaître une armure</h3>
+            <div class="mode-grid">
+              <button onclick="startTraining('sharps')">♯ Dièses</button>
+              <button onclick="startTraining('flats')">♭ Bémols</button>
+            </div>
+          </div>
+
+          <div class="home-block">
+            <h3>🔁 Aller plus loin</h3>
+            <div class="mode-grid">
+              <button onclick="startTraining('mixed')">🎯 Mélange</button>
+              <button onclick="startReverse()">Tonalité → armure</button>
+            </div>
+          </div>
+
+          <div class="home-block challenge-block">
+            <h3>⚡ Défi final</h3>
+            <button class="red" onclick="startChallenge()">Défi 10 questions</button>
+          </div>
         </div>
       </div>
 
