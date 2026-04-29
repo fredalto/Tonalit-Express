@@ -36,3 +36,21 @@
   .home-block{padding:12px}
   .home-block h3{font-size:18px}
 }
+@media(max-width:650px){
+  body{
+    padding:8px 4px;
+  }
+
+  .section{
+    min-height:auto;
+    padding:10px;
+  }
+
+  .home-groups{
+    gap:12px;
+  }
+
+  .home-block{
+    padding:10px;
+  }
+}
